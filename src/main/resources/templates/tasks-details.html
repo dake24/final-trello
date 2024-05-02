@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Детали задачи</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}">
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-5">Детали задачи</h1>
+    <div class="card mt-3">
+        <div class="card-body">
+            <h5 class="card-title" th:text="${task.title}"></h5>
+            <p class="card-text" th:text="${task.description}"></p>
+            <p class="card-text">Статус: <span th:text="${task.status}"></span></p>
+            <form th:action="@{ ${currentUri} + '/status'}" method="post">
+                <div class="mb-3">
+                    <label for="status" class="form-label">Изменить статус:</label>
+                    <select class="form-select" id="status" name="newStatus">
+                        <option value="0" th:selected="${task.status == 0}">TO DO</option>
+                        <option value="1" th:selected="${task.status == 1}">IN TEST</option>
+                        <option value="2" th:selected="${task.status == 2}">DONE</option>
+                        <option value="3" th:selected="${task.status == 3}">FAILED</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Изменить статус</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

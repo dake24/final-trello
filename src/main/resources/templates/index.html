@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Главная страница</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}">
+</head>
+<body>
+
+<form th:action="@{/folders}" method="post">
+    <div class="mb-3">
+        <label for="folderName" class="form-label">Название папки:</label>
+        <input type="text" class="form-control" id="folderName" name="folderName" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Добавить папку</button>
+</form>
+
+
+<div class="container">
+    <h1 class="mt-5">Список всех папок</h1>
+    <ul class="list-group mt-3">
+        <li th:each="folder : ${folders}" class="list-group-item">
+            <a th:href="@{'/folders/' + ${folder.id}}" th:text="${folder.name}"></a>
+        </li>
+    </ul>
+</div>
+
+<script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.min.js}"></script>
+</body>
+</html>

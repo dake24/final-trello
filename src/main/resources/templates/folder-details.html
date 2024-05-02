@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Детали папки</title>
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}">
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-5">Детали папки</h1>
+    <div class="card mt-3">
+        <div class="card-body">
+            <h5 class="card-title" th:text="${folder.name}"></h5>
+            <ul class="list-group mt-3">
+                <li th:each="category : ${folder.categories}"
+                    class="list-group-item d-flex justify-content-between align-items-center">
+                    <span th:text="${category.name}"></span>
+                    <a href="#" th:onclick="'deleteCategory(' + ${folder.id} + ', ' + ${category.id} + ');'"
+                       class="btn btn-danger btn-sm">&times;</a>
+                </li>
+            </ul>
+            <form th:action="@{'/folders/' + ${folder.id} + '/categories'}" method="post">
+                <div class="mb-3">
+                    <label for="categoryName" class="form-label">Название категории:</label>
+                    <input type="text" class="form-control" id="categoryName" name="categoryName" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Добавить категорию</button>
+            </form>
+
+            <form th:action="@{'/folders/' + ${folder.id} + '/tasks'}" method="post">
+                <div class="mb-3">
+                    <label for="taskTitle" class="form-label">Заголовок задачи:</label>
+                    <input type="text" class="form-control" id="taskTitle" name="title" required>
+                </div>
+                <div class="mb-3">
+                    <label for="taskDescription" class="form-label">Описание задачи:</label>
+                    <textarea class="form-control" id="taskDescription" name="description" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Добавить задачу</button>
+            </form>
+
+            <h2 class="mt-5">Задачи папки</h2>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Заголовок</th>
+                    <th scope="col">Описание</th>
+                    <th scope="col">Статус</th>
+                    <th scope="col">Детали</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Перечисление задач папки -->
+                <tr th:each="task : ${tasks}">
+                    <td th:text="${task.id}"></td>
+                    <td th:text="${task.title}"></td>
+                    <td th:text="${task.description}"></td>
+                    <td>
+                        <span th:switch="${task.status}">
+                            <span th:case="0">TO DO</span>
+                            <span th:case="1">IN TEST</span>
+                            <span th:case="2">DONE</span>
+                            <span th:case="3">FAILED</span>
+                        </span>
+                    </td>
+                    <td><a th:href="@{'/folders/' + ${folder.id} + '/tasks/' + ${task.id}}">Подробности</a></td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    function deleteCategory(folderId, categoryId) {
+        if (confirm("Вы уверены, что хотите удалить эту категорию?")) {
+            var url = '/folders/' + folderId + '/categories/' + categoryId + '/delete';
+            var xhr = new XMLHttpRequest();
+            xhr.open('DELETE', url, true);
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    window.location.reload(); // Перезагрузить страницу после успешного удаления
+                }
+            };
+            xhr.send();
+        }
+    }
+</script>
+
+</body>
+</html>
